@@ -1,0 +1,17 @@
+[package]
+name = "cx-app231213"
+version = "0.1.0"
+authors = ["Administrator"]
+edition = "2021"
+build = "build.rs"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+chrono = "0.4.31"
+clipboard = "0.5.0"
+slint = "1.0"
+winapi = "0.3.9"
+
+[build-dependencies]
+slint-build = "1.0"

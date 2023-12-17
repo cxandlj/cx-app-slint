@@ -1,0 +1,121 @@
+import { Button, VerticalBox , ListView,HorizontalBox, Switch} from "std-widgets.slint";
+
+struct ClipboardContents {
+  content:string,
+  lines:int,
+  date:string
+}
+
+enum ListViewBtnType{
+  Copy,
+  Del
+}
+export ListItemMenu:=Rectangle {
+  property <string> text;
+  in-out property <ListViewBtnType> btn_type;
+  callback clicked<=>ta.clicked;
+  protected function get_image_by_btn_type() ->image{
+    if(btn_type==ListViewBtnType.Copy){
+      return @image-url("../images/copy.png");
+    }
+    else if(btn_type==ListViewBtnType.Del){
+      return @image-url("../images/delete.png");
+    }
+    return @image-url("../images/delete.png");
+  }
+  // background: @image-url("images/delete.png");
+            width: 24px;
+            height: 24px;
+            background: ta.has-hover?#ccc:transparent;
+            ta:=TouchArea {
+              mouse-cursor: MouseCursor.pointer;
+              clicked => {
+
+            }
+            }
+            // t:=Text {
+            //   x:0;
+            //   y:0;
+            //   height: 14px;
+            // }
+            Image {
+              x:3px;
+              y:3px;
+              source: get-image-by-btn-type();
+              width: 18px;
+              height: 18px;
+            }
+          }
+export component AppWindow inherits Window {
+    title: "cx-app";
+    width: 800px;
+    height: 600px;
+    in-out property <string> name;
+    out property <bool> is_use<=>is_use_s.checked;
+    in-out property <[ClipboardContents]> clipboard_contents:[];
+    callback copy_clicked(string);
+    callback del_clicked(int);
+    VerticalBox {
+      width: parent.width;
+      HorizontalBox {
+        is_use_s:=Switch {
+          width: 80px;
+          text:"启用";
+        }
+        Button {
+          text: "删除全部";
+          width: 80px;
+          clicked => {
+            clipboard-contents=[];
+          }
+        }
+      }
+      ListView {
+        width:100%;
+        height: parent.height -30px;
+        for content[idx] in root.clipboard-contents : Rectangle{
+          height: 14px*content.lines +60px;
+          width: parent.width;
+         VerticalBox { 
+          width: parent.width;
+          spacing: 5px;
+            Text {
+              font-size: 10px;
+              text: content.date;
+            horizontal-alignment: right;
+            height: 15px;
+            }
+          HorizontalBox {
+            padding-left: 5px;
+            padding-right: 5px;
+            spacing: 5px;
+            width:parent.width - 10px;
+          Text {
+            width: parent.width -15px - copyMenu.width - delMenu.width;
+            text: content.content;
+          }
+          copyMenu:=ListItemMenu{
+            text: "复制";
+            btn-type: ListViewBtnType.Copy;
+            clicked => {
+              copy-clicked(content.content);
+            }
+          }
+          delMenu:=ListItemMenu{
+            text: "删除";
+            btn-type: ListViewBtnType.Del;
+            clicked => {
+              del-clicked(idx)
+            }
+          }
+        }
+          Rectangle {
+            height: 1px;
+            x:0;
+            background: #ccc;
+          }
+        }
+      }
+      }
+    }
+}
