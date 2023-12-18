@@ -1,6 +1,6 @@
 # cx-app-slint
-The clipboard management applicant developed using slint
+The clipboard management application developed using slint
 
-Listen to the clipboard at the following website
+Listen to the clipboard refer to the following website
 https://blog.csdn.net/qq_41221596/article/details/130142776
 
